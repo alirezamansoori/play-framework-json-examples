@@ -1,31 +1,48 @@
-var PalindromeInit = function(jQuery, context){
-    return (function($, context){
-        var setupTestClickHandler = function(){
-            $('#submit-button').on('click', testPalindrome);
-        };
+// Module: Palindrome
+// Dependencies:
+//  - jQuery: the standard jQuery module object
+var Palindrome = (function($){
+    var context;
 
-        var testPalindrome = function(){
-            var text;
+    // Attaches a click handler to the 'submit' button on the page
+    var setupTestClickHandler = function(){
+        $('#submit-button').on('click', testPalindrome);
+    };
 
-            text = $('#test-string').val();
+    // Retrieves text from the 'test string' text box on the page, and requests a palindrome test for the text
+    var testPalindrome = function(){
+        var text;
 
-            $.ajax({
-                url: context + '/api/palindrome.json',
-                data: '{"testString":"' + text.replace('"', '\\"') + '"}',
-                contentType: 'application/json; charset=UTF-8',
-                type: 'POST',
-                success: handlePalindromeResponse
-            });
-        };
+        text = $('#test-string').val();
 
-        var handlePalindromeResponse = function(response){
-            $('#results-list').append($('<li>' + response.testString + ' is ' + (response.isPalindrome === true ? '' : 'not ') + 'a palindrome.</li>'));
-        };
+        $.ajax({
+            type: 'POST',
+            url: context + '/api/palindrome.json',
+            contentType: 'application/json; charset=UTF-8',
 
-        return {
-            init: function(context){
-                setupTestClickHandler();
-            }
-        };
-    })(jQuery, context);
-};
+            // The Play framework expects JSON keys to be strings, including wrapped double quotes.  However, the
+            // jQuery ajax method does not wrap the keys in its data requests, so it must be done manually.
+            data: '{"testString":"' + text.replace('"', '\\"') + '"}',
+
+            success: handlePalindromeResponse
+        });
+    };
+
+    // Takes an palindrome test response object and outputs a summary to the list of results.
+    var handlePalindromeResponse = function(response){
+        var resultItem = $('<li>');
+        resultItem.html('<strong>' + response.testString + '</strong> is ' + (response.isPalindrome === true ? '' : 'not ') + 'a palindrome.');
+        resultItem.hide();
+        resultItem.appendTo('#results-list');
+        resultItem.fadeIn();
+    };
+
+    return {
+        // Initializes the Palindrome module
+        // context: the root URL of the application
+        init: function(contextUrl){
+            context = contextUrl;
+            setupTestClickHandler();
+        }
+    };
+})(jQuery);
