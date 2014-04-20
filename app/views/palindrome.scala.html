@@ -1,0 +1,18 @@
+@main("Palindrome Tester") {
+    <p>
+        <input type="text" id="test-string" />
+        &nbsp;
+        <button id="submit-button">Test</button>
+    </p>
+    <p>
+        <h1>Results</h1>
+        <ul id="results-list"></ul>
+    </p>
+
+    <script src="@routes.Assets.at("javascripts/palindrome.js")" type="text/javascript"></script>
+
+    <script>
+        var Palindrome = PalindromeInit(jQuery, 'http://localhost:9000');
+        Palindrome.init();
+    </script>
+}
