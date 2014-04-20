@@ -3,3 +3,7 @@ project/project
 project/target
 target
 tmp
+.idea/workspace.xml
+.idea/tasks.xml
+.idea/libraries
+.idea/dictionaries
